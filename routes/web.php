@@ -14,3 +14,4 @@
 Route::get('/', 'HotelsController@show');
 Route::post('/book', 'BookingsController@store');
 Route::post('/searches', 'HotelsController@logSearch');
+Route::get('/{search}', 'HotelsController@filter');

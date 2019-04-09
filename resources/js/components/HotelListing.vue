@@ -1,5 +1,6 @@
 <template>
     <div>
+        <div v-if="hotels.length < 1" class="text-center"><h1>Your search returned no matches</h1></div>
         <div v-for="hotel in hotels" class="card mt-3">
             <div class="card-body">
 
@@ -88,7 +89,7 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <div v-if="error !== ''" class="alert alert-danger" role="alert">
+                                <div v-if="error !== ''" class="alert alert-danger text-center" role="alert">
                                     {{ error }}
                                 </div>
                                 <div class="form-group">
@@ -176,7 +177,9 @@
                             $('#dismiss').click();
                         })
                         .catch(error => {
-                            console.log(error.data)
+                            console.log(error);
+                            console.log(error.data);
+                            self.error = "Please confirm all fields are valid!";
                         })
                 }
                 else
@@ -192,23 +195,23 @@
             }
         },
         created() {
-            //handle get request
-            let url = new URLSearchParams(window.location.search);
-            let search = url.get('search');
-
-            //check hotel name / address for match with search request
-            if (search !== null)
-            {
-                for (let i = 0; i < this.hotels.length; i++)
-                {
-                    if (!this.hotels[i].name.includes(search) && !this.hotels[i].street_address.includes(search) &&
-                        !this.hotels[i].city.includes(search) && !this.hotels[i].state.includes(search))
-                    {
-                        this.hotels.splice(i, 1);
-                        i--;
-                    }
-                }
-            }
+            // //handle get request
+            // let url = new URLSearchParams(window.location.search);
+            // let search = url.get('search');
+            //
+            // //check hotel name / address for match with search request
+            // if (search !== null)
+            // {
+            //     for (let i = 0; i < this.hotels.length; i++)
+            //     {
+            //         if (!this.hotels[i].name.includes(search) && !this.hotels[i].street_address.includes(search) &&
+            //             !this.hotels[i].city.includes(search) && !this.hotels[i].state.includes(search))
+            //         {
+            //             this.hotels.splice(i, 1);
+            //             i--;
+            //         }
+            //     }
+            // }
         },
         mounted() {
 

@@ -1916,6 +1916,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "HotelListing",
   props: ['hotels'],
@@ -1969,7 +1970,9 @@ __webpack_require__.r(__webpack_exports__);
           self.error = '';
           $('#dismiss').click();
         })["catch"](function (error) {
+          console.log(error);
           console.log(error.data);
+          self.error = "Please confirm all fields are valid!";
         });
       } else {
         self.error = "All fields are required!";
@@ -1980,19 +1983,23 @@ __webpack_require__.r(__webpack_exports__);
       return true;
     }
   },
-  created: function created() {
-    //handle get request
-    var url = new URLSearchParams(window.location.search);
-    var search = url.get('search'); //check hotel name / address for match with search request
-
-    if (search !== null) {
-      for (var i = 0; i < this.hotels.length; i++) {
-        if (!this.hotels[i].name.includes(search) && !this.hotels[i].street_address.includes(search) && !this.hotels[i].city.includes(search) && !this.hotels[i].state.includes(search)) {
-          this.hotels.splice(i, 1);
-          i--;
-        }
-      }
-    }
+  created: function created() {// //handle get request
+    // let url = new URLSearchParams(window.location.search);
+    // let search = url.get('search');
+    //
+    // //check hotel name / address for match with search request
+    // if (search !== null)
+    // {
+    //     for (let i = 0; i < this.hotels.length; i++)
+    //     {
+    //         if (!this.hotels[i].name.includes(search) && !this.hotels[i].street_address.includes(search) &&
+    //             !this.hotels[i].city.includes(search) && !this.hotels[i].state.includes(search))
+    //         {
+    //             this.hotels.splice(i, 1);
+    //             i--;
+    //         }
+    //     }
+    // }
   },
   mounted: function mounted() {}
 });
@@ -2028,13 +2035,13 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     filter: function filter() {
-      var _this = this;
+      var self = this;
 
       if (this.search !== '') {
         axios.post('/searches', {
-          search: this.search
+          search: self.search
         }).then(function (response) {
-          window.location = '/?search=' + _this.search;
+          window.location = '/' + self.search;
         })["catch"](function (error) {
           console.log(error.data);
         });
@@ -37854,348 +37861,361 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    _vm._l(_vm.hotels, function(hotel) {
-      return _c("div", { staticClass: "card mt-3" }, [
-        _c("div", { staticClass: "card-body" }, [
-          _c(
-            "div",
-            {
-              staticClass:
-                "d-flex align-items-lg-start justify-content-start mb-3"
-            },
-            [
-              _vm._m(0, true),
-              _vm._v(" "),
-              _c("div", { staticClass: "ml-4 address_section" }, [
-                _c("div", [_c("h3", [_vm._v(_vm._s(hotel.name))])]),
+    [
+      _vm.hotels.length < 1
+        ? _c("div", { staticClass: "text-center" }, [
+            _c("h1", [_vm._v("Your search returned no matches")])
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _vm._l(_vm.hotels, function(hotel) {
+        return _c("div", { staticClass: "card mt-3" }, [
+          _c("div", { staticClass: "card-body" }, [
+            _c(
+              "div",
+              {
+                staticClass:
+                  "d-flex align-items-lg-start justify-content-start mb-3"
+              },
+              [
+                _vm._m(0, true),
                 _vm._v(" "),
-                _c("div", [
-                  _vm._v(
-                    "\n                        " +
-                      _vm._s(hotel.street_address) +
-                      ", " +
-                      _vm._s(hotel.city) +
-                      ", " +
-                      _vm._s(hotel.state) +
-                      "\n                    "
-                  )
+                _c("div", { staticClass: "ml-4 address_section" }, [
+                  _c("div", [_c("h3", [_vm._v(_vm._s(hotel.name))])]),
+                  _vm._v(" "),
+                  _c("div", [
+                    _vm._v(
+                      "\n                        " +
+                        _vm._s(hotel.street_address) +
+                        ", " +
+                        _vm._s(hotel.city) +
+                        ", " +
+                        _vm._s(hotel.state) +
+                        "\n                    "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "mt-lg-5" }, [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-primary point",
+                        on: {
+                          click: function($event) {
+                            return _vm.toggleRooms(hotel)
+                          }
+                        }
+                      },
+                      [_vm._v("Rooms / Availability")]
+                    )
+                  ])
                 ]),
                 _vm._v(" "),
-                _c("div", { staticClass: "mt-lg-5" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-primary point",
-                      on: {
-                        click: function($event) {
-                          return _vm.toggleRooms(hotel)
-                        }
-                      }
-                    },
-                    [_vm._v("Rooms / Availability")]
-                  )
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", {
-                staticClass: "ml-4 starting-price",
-                domProps: {
-                  textContent: _vm._s(
-                    "Starting at $" + _vm.getStartingPrice(hotel)
-                  )
-                }
-              })
-            ]
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "room-section", attrs: { id: "rooms_" + hotel.id } },
-            _vm._l(hotel.rooms, function(room) {
-              return _c("div", { staticClass: "room-row" }, [
-                _c(
-                  "div",
-                  {
-                    staticClass:
-                      "d-flex align-items-lg-start justify-content-start pt-2 pb-2"
-                  },
-                  [
-                    _c("div", { staticClass: "w-25" }, [
-                      _vm._v(_vm._s(room.name))
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "w-25 ml-3 availability" }, [
-                      _c("strong", [_vm._v(_vm._s(room.availability))])
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "ml-3" }, [
-                      _c(
-                        "button",
-                        {
-                          staticClass: "btn btn-primary",
-                          on: {
-                            click: function($event) {
-                              return _vm.toggleDetails(room)
-                            }
-                          }
-                        },
-                        [_vm._v("DETAILS")]
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "w-25 ml-3 text-center" }, [
-                      _c("strong", [_vm._v("$" + _vm._s(room.price))]),
-                      _vm._v(" Per Night")
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "ml-3" }, [
-                      _c(
-                        "button",
-                        {
-                          staticClass: "btn btn-primary",
-                          attrs: {
-                            "data-toggle": "modal",
-                            "data-target": "#modal",
-                            disabled: room.availability === "SOLD OUT"
-                          },
-                          on: {
-                            click: function($event) {
-                              return _vm.setRequestingRoom(room)
-                            }
-                          }
-                        },
-                        [_vm._v("REQUEST")]
-                      )
-                    ])
-                  ]
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    staticClass: "details mt-3",
-                    attrs: { id: "details_" + room.id }
-                  },
-                  [
-                    _c(
-                      "div",
-                      {
-                        staticClass:
-                          "d-flex align-items-lg-start justify-content-start pb-2"
-                      },
-                      [
-                        _vm._m(1, true),
-                        _vm._v(" "),
-                        _vm._m(2, true),
-                        _vm._v(" "),
-                        _c(
-                          "div",
-                          { staticClass: "text-right float-right ml-3" },
-                          [
-                            _vm._v(
-                              "\n                                $" +
-                                _vm._s(room.price) +
-                                " "
-                            ),
-                            _c("br"),
-                            _vm._v(" "),
-                            _c("span", {
-                              domProps: {
-                                textContent: _vm._s(
-                                  "$" + _vm.getTaxes(room.price)
-                                )
-                              }
-                            }),
-                            _vm._v(" "),
-                            _c("br"),
-                            _vm._v("\n                                $0.00 "),
-                            _c("br"),
-                            _vm._v(" "),
-                            _c("strong", {
-                              domProps: {
-                                textContent: _vm._s(_vm.getTotal(room.price))
-                              }
-                            })
-                          ]
-                        )
-                      ]
+                _c("div", {
+                  staticClass: "ml-4 starting-price",
+                  domProps: {
+                    textContent: _vm._s(
+                      "Starting at $" + _vm.getStartingPrice(hotel)
                     )
-                  ]
-                )
-              ])
-            }),
-            0
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              staticClass: "modal fade",
-              attrs: {
-                id: "modal",
-                tabindex: "-1",
-                role: "dialog",
-                "aria-hidden": "true"
-              }
-            },
-            [
-              _c(
-                "div",
-                { staticClass: "modal-dialog", attrs: { role: "document" } },
-                [
-                  _c("div", { staticClass: "modal-content" }, [
-                    _c("div", { staticClass: "modal-header" }, [
-                      _c("h5", { staticClass: "modal-title" }, [
-                        _vm._v(_vm._s(_vm.requestingRoom.name))
+                  }
+                })
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass: "room-section",
+                attrs: { id: "rooms_" + hotel.id }
+              },
+              _vm._l(hotel.rooms, function(room) {
+                return _c("div", { staticClass: "room-row" }, [
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "d-flex align-items-lg-start justify-content-start pt-2 pb-2"
+                    },
+                    [
+                      _c("div", { staticClass: "w-25" }, [
+                        _vm._v(_vm._s(room.name))
                       ]),
                       _vm._v(" "),
-                      _vm._m(3, true)
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "modal-body" }, [
-                      _vm.error !== ""
-                        ? _c(
-                            "div",
-                            {
-                              staticClass: "alert alert-danger",
-                              attrs: { role: "alert" }
-                            },
-                            [
-                              _vm._v(
-                                "\n                                " +
-                                  _vm._s(_vm.error) +
-                                  "\n                            "
-                              )
-                            ]
-                          )
-                        : _vm._e(),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "form-group" }, [
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.name,
-                              expression: "name"
-                            }
-                          ],
-                          staticClass: "form-control",
-                          attrs: {
-                            type: "text",
-                            id: "name",
-                            placeholder: "Full name"
-                          },
-                          domProps: { value: _vm.name },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
-                              }
-                              _vm.name = $event.target.value
-                            }
-                          }
-                        })
+                      _c("div", { staticClass: "w-25 ml-3 availability" }, [
+                        _c("strong", [_vm._v(_vm._s(room.availability))])
                       ]),
                       _vm._v(" "),
-                      _c("div", { staticClass: "form-group" }, [
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.email,
-                              expression: "email"
-                            }
-                          ],
-                          staticClass: "form-control",
-                          attrs: {
-                            type: "text",
-                            id: "email",
-                            placeholder: "Email"
-                          },
-                          domProps: { value: _vm.email },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
-                              }
-                              _vm.email = $event.target.value
-                            }
-                          }
-                        })
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "form-group" }, [
-                        _c("label", [_vm._v("Card Number")]),
-                        _vm._v(" "),
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.creditCard,
-                              expression: "creditCard"
-                            }
-                          ],
-                          staticClass: "form-control",
-                          attrs: {
-                            type: "text",
-                            id: "creditCard",
-                            placeholder: "0000 0000 0000 0000"
-                          },
-                          domProps: { value: _vm.creditCard },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
-                              }
-                              _vm.creditCard = $event.target.value
-                            }
-                          }
-                        })
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      { staticClass: "modal-footer justify-content-start" },
-                      [
-                        _c("strong", {
-                          staticClass: "w-75 total-modal",
-                          domProps: {
-                            textContent: _vm._s(
-                              "Total: $" +
-                                _vm.getTotal(_vm.requestingRoom.price)
-                            )
-                          }
-                        }),
-                        _vm._v(" "),
+                      _c("div", { staticClass: "ml-3" }, [
                         _c(
                           "button",
                           {
-                            staticClass: "btn btn-primary ml-5",
-                            attrs: { type: "button" },
-                            on: { click: _vm.submitRequest }
+                            staticClass: "btn btn-primary",
+                            on: {
+                              click: function($event) {
+                                return _vm.toggleDetails(room)
+                              }
+                            }
                           },
-                          [_vm._v("Request")]
-                        ),
+                          [_vm._v("DETAILS")]
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "w-25 ml-3 text-center" }, [
+                        _c("strong", [_vm._v("$" + _vm._s(room.price))]),
+                        _vm._v(" Per Night")
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "ml-3" }, [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-primary",
+                            attrs: {
+                              "data-toggle": "modal",
+                              "data-target": "#modal",
+                              disabled: room.availability === "SOLD OUT"
+                            },
+                            on: {
+                              click: function($event) {
+                                return _vm.setRequestingRoom(room)
+                              }
+                            }
+                          },
+                          [_vm._v("REQUEST")]
+                        )
+                      ])
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass: "details mt-3",
+                      attrs: { id: "details_" + room.id }
+                    },
+                    [
+                      _c(
+                        "div",
+                        {
+                          staticClass:
+                            "d-flex align-items-lg-start justify-content-start pb-2"
+                        },
+                        [
+                          _vm._m(1, true),
+                          _vm._v(" "),
+                          _vm._m(2, true),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            { staticClass: "text-right float-right ml-3" },
+                            [
+                              _vm._v(
+                                "\n                                $" +
+                                  _vm._s(room.price) +
+                                  " "
+                              ),
+                              _c("br"),
+                              _vm._v(" "),
+                              _c("span", {
+                                domProps: {
+                                  textContent: _vm._s(
+                                    "$" + _vm.getTaxes(room.price)
+                                  )
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c("br"),
+                              _vm._v(
+                                "\n                                $0.00 "
+                              ),
+                              _c("br"),
+                              _vm._v(" "),
+                              _c("strong", {
+                                domProps: {
+                                  textContent: _vm._s(_vm.getTotal(room.price))
+                                }
+                              })
+                            ]
+                          )
+                        ]
+                      )
+                    ]
+                  )
+                ])
+              }),
+              0
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass: "modal fade",
+                attrs: {
+                  id: "modal",
+                  tabindex: "-1",
+                  role: "dialog",
+                  "aria-hidden": "true"
+                }
+              },
+              [
+                _c(
+                  "div",
+                  { staticClass: "modal-dialog", attrs: { role: "document" } },
+                  [
+                    _c("div", { staticClass: "modal-content" }, [
+                      _c("div", { staticClass: "modal-header" }, [
+                        _c("h5", { staticClass: "modal-title" }, [
+                          _vm._v(_vm._s(_vm.requestingRoom.name))
+                        ]),
                         _vm._v(" "),
-                        _c("button", {
-                          staticClass: "hidden",
-                          attrs: { id: "dismiss", "data-dismiss": "modal" }
-                        })
-                      ]
-                    )
-                  ])
-                ]
-              )
-            ]
-          )
+                        _vm._m(3, true)
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "modal-body" }, [
+                        _vm.error !== ""
+                          ? _c(
+                              "div",
+                              {
+                                staticClass: "alert alert-danger text-center",
+                                attrs: { role: "alert" }
+                              },
+                              [
+                                _vm._v(
+                                  "\n                                " +
+                                    _vm._s(_vm.error) +
+                                    "\n                            "
+                                )
+                              ]
+                            )
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "form-group" }, [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.name,
+                                expression: "name"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            attrs: {
+                              type: "text",
+                              id: "name",
+                              placeholder: "Full name"
+                            },
+                            domProps: { value: _vm.name },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.name = $event.target.value
+                              }
+                            }
+                          })
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "form-group" }, [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.email,
+                                expression: "email"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            attrs: {
+                              type: "text",
+                              id: "email",
+                              placeholder: "Email"
+                            },
+                            domProps: { value: _vm.email },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.email = $event.target.value
+                              }
+                            }
+                          })
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "form-group" }, [
+                          _c("label", [_vm._v("Card Number")]),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.creditCard,
+                                expression: "creditCard"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            attrs: {
+                              type: "text",
+                              id: "creditCard",
+                              placeholder: "0000 0000 0000 0000"
+                            },
+                            domProps: { value: _vm.creditCard },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.creditCard = $event.target.value
+                              }
+                            }
+                          })
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "modal-footer justify-content-start" },
+                        [
+                          _c("strong", {
+                            staticClass: "w-75 total-modal",
+                            domProps: {
+                              textContent: _vm._s(
+                                "Total: $" +
+                                  _vm.getTotal(_vm.requestingRoom.price)
+                              )
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-primary ml-5",
+                              attrs: { type: "button" },
+                              on: { click: _vm.submitRequest }
+                            },
+                            [_vm._v("Request")]
+                          ),
+                          _vm._v(" "),
+                          _c("button", {
+                            staticClass: "hidden",
+                            attrs: { id: "dismiss", "data-dismiss": "modal" }
+                          })
+                        ]
+                      )
+                    ])
+                  ]
+                )
+              ]
+            )
+          ])
         ])
-      ])
-    }),
-    0
+      })
+    ],
+    2
   )
 }
 var staticRenderFns = [

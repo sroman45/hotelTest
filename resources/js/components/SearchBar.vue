@@ -19,13 +19,14 @@
         },
         methods: {
             filter() {
+                let self = this;
                 if (this.search !== '')
                 {
                     axios.post('/searches', {
-                        search: this.search
+                        search: self.search
                     })
                         .then(response => {
-                            window.location = '/?search=' + this.search;
+                            window.location = '/' + self.search;
                         })
                         .catch(error => {
                             console.log(error.data)

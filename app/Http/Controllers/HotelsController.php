@@ -15,11 +15,22 @@ class HotelsController extends Controller
         return view('welcome', ['hotels' => $hotels]);
     }
 
+    public function filter($search)
+    {
+        $hotels = Hotels::where('name', 'like', '%'. $search .'%')
+            ->orWhere('street_address', 'like', '%'. $search .'%')
+            ->orWhere('city', 'like', '%'. $search .'%')
+            ->orWhere('state', 'like', '%'. $search .'%')
+            ->get();
+
+        return view('welcome', ['hotels' => $hotels]);
+    }
+
     public function logSearch(Request $request)
     {
         $data = json_decode($request->getContent());
 
-        Log::info('Search: ' . $data->{'search'});
+        Log::info('New Search: ' . $data->{'search'});
 
         return response($data->{'search'}, 200);
     }

@@ -11,6 +11,12 @@ class BookingsController extends Controller
     {
         $data = json_decode($request->getContent());
 
+        $request->validate([
+            'name' =>'required',
+            'email' => 'required|email',
+            'creditCard' =>'required|digits:16'
+        ]);
+
         Bookings::create([
             'rooms_id' => $data->{'roomId'},
             'email' => $data->{'email'},
